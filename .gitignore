@@ -1,0 +1,6 @@
+
+# IDE generated files
+.vscode/
+
+# Python Cache
+__pycache__
