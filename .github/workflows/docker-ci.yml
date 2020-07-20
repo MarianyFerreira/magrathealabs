@@ -39,4 +39,4 @@ jobs:
             docker-compose --file docker-compose.dev.yml run magrathealabs-frontend yarn run lint:check
       - name: Run Frontend test
         run: |
-            docker-compose --file docker-compose.dev.yml run magrathealabs-frontend yarn run test
+            docker-compose --file docker-compose.dev.yml run magrathealabs-frontend yarn run test --watchAll=false
