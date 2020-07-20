@@ -1,11 +1,22 @@
-const Koa = require('koa');
+/* eslint-disable no-console */
+const server = require('./server');
 
-const app = new Koa();
+const start = () => {
+  server.listen(3100);
+  console.log('Server is listening on port', 3100);
+};
 
-app.use(async (ctx) => {
-  ctx.body = 'Hello World';
-});
+const shutdown = (sig) => {
+  console.log('API shutdown', sig);
+  server.close((err) => process.exit(err ? 1 : 0));
+};
 
-app.listen(3100);
+process.once('SIGTERM', shutdown);
+process.once('SIGINT', shutdown);
 
-module.exports = app;
+start();
+
+module.exports = {
+  start,
+  server,
+};
