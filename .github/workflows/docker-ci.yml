@@ -1,0 +1,42 @@
+name: Docker
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - develop
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Run tests for any PRs.
+  pull_request:
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run build
+        run: |
+            docker-compose --file docker-compose.dev.yml build
+
+      - name: Run Backend lint
+        run: |
+            docker-compose --file docker-compose.dev.yml run backend yarn run lint:check
+      - name: Run Backend test
+        run: |
+            docker-compose --file docker-compose.dev.yml run -e NODE_ENV=test backend yarn run test
+            
+      - name: Run Frontend lint
+        run: |
+            docker-compose --file docker-compose.dev.yml run frontend yarn run lint:check
+      - name: Run Frontend test
+        run: |
+            docker-compose --file docker-compose.dev.yml run frontend yarn run test
