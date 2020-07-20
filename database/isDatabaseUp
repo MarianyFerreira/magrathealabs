@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eo pipefail
+
+
+USER="${MYSQL_USER:-root}"
+DB="${MYSQL_DATABASE:-magrathealabs}"
+export MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
+
+
+args=(
+  --username="$USER"
+  --dbname="$DB"
+)
+
+SELECT="$(echo 'SELECT 1' | mysql "${args[@]}")"
+
+if  [ "$SELECT" = '1' ]
+then
+  exit 0
+fi
+
+exit 1
