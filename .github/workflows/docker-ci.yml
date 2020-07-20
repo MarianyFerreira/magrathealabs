@@ -29,14 +29,14 @@ jobs:
 
       - name: Run Backend lint
         run: |
-            docker-compose --file docker-compose.dev.yml run backend yarn run lint:check
+            docker-compose --file docker-compose.dev.yml run magrathealabs-backend yarn run lint:check
       - name: Run Backend test
         run: |
-            docker-compose --file docker-compose.dev.yml run -e NODE_ENV=test backend yarn run test
-            
+            docker-compose --file docker-compose.dev.yml run -e NODE_ENV=test magrathealabs-backend yarn run test
+
       - name: Run Frontend lint
         run: |
-            docker-compose --file docker-compose.dev.yml run frontend yarn run lint:check
+            docker-compose --file docker-compose.dev.yml run magrathealabs-frontend yarn run lint:check
       - name: Run Frontend test
         run: |
-            docker-compose --file docker-compose.dev.yml run frontend yarn run test
+            docker-compose --file docker-compose.dev.yml run magrathealabs-frontend yarn run test

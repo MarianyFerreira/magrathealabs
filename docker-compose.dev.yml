@@ -1,0 +1,76 @@
+version: '3.2'
+
+services:
+  magrathealabs-database:
+    container_name: magrathealabs-database
+    image: magrathealabs-database
+    build:
+      context: ./database
+      dockerfile: ./docker/Dockerfile
+      args:
+        - TZ=America/Sao_Paulo
+    env_file:
+      - ./database/docker/.docker.dev.env
+    volumes:
+      - type: volume
+        source: magrathealabs_data
+        target: /var/lib/mysql
+    ports:
+      - target: 3306
+        published: 3306
+    networks:
+      - magrathealabs
+
+  magrathealabs-backend:
+    container_name: magrathealabs-backend
+    image: magrathealabs-backend
+    build:
+      context: ./backend
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - target: 3100
+        published: 3100
+      - target: 9229
+        published: 9229
+    depends_on:
+      - magrathealabs-database
+    volumes:
+      - type: bind
+        source: ./backend/src
+        target: /backend/src
+      - type: bind
+        source: ./backend/coverage
+        target: /backend/coverage
+    networks:
+      - magrathealabs
+
+  magrathealabs-frontend:
+    container_name: magrathealabs-frontend
+    image: magrathealabs-frontend
+    build:
+      context: ./frontend
+      dockerfile: ./docker/Dockerfile
+      args:
+        - TZ=America/Sao_Paulo
+    env_file:
+      - ./frontend/docker/.docker.dev.env
+    volumes:
+      - type: bind
+        source: ./frontend/public
+        target: /frontend/public
+      - type: bind
+        source: ./frontend/src
+        target: /frontend/src
+    ports:
+      - target: 3000
+        published: 3000
+    depends_on:
+      - magrathealabs-backend
+    networks:
+      - magrathealabs
+
+volumes:
+  magrathealabs_data:
+
+networks:
+  magrathealabs:
